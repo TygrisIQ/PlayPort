@@ -1,34 +1,37 @@
-use std::{net::{TcpListener, TcpStream}, thread};
-use std::io::Read;
+use std::thread;
 use std::sync::mpsc;
+use input::JoyDevice;
 
 mod server;
+mod input;
 fn main(){
     let port= std::env::args().nth(1).unwrap_or(String::from("8007"));
     println!("port :{}",port);
-    let device = uinput::default().expect("default failed")
-        .name("test").expect("name failed")
-        .event(uinput::event::Keyboard::All).expect("event failed")
-        .create().expect("Creation failed");
+    
+    //device init
+    let mut jdevice = input::JoyDevice::new();
     //network
     thread::spawn(||{server::broadcast()});
     let (tx, rx) = mpsc::channel();
     let port_clone = port.clone();
-    thread::spawn(move || {
-         
-    let code = server::tcp_listener(&port_clone).unwrap(); 
-    tx.send(code).unwrap();
-        
+    thread::spawn(move || { 
+    server::tcp_listener(&port_clone, tx);    
+    
     });
-    if let Ok(code) = rx.recv(){
-        println!("Code is: {}", code);
-        joy_device(device,code);
+   
+    loop {
+    if let Ok(x) = rx.try_recv(){
+       JoyDevice::handle_input(&mut jdevice, x); 
     }
-}
+    }
+    }
+//a single input is being read multiple times leading to f key being pressed repeatedly
 
-fn joy_device(device: uinput::Device ,code : String){
-    println!("code is {}", code);
-}
+
+
+
+
+
     
 
 

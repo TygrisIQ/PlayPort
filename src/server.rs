@@ -1,5 +1,5 @@
 use  std::net::UdpSocket;
-use std::sync::Arc;
+use std::sync::{mpsc, Arc};
 use std::thread;
 use std::net::{TcpStream, TcpListener};
 use std::io::Read;
@@ -43,22 +43,24 @@ fn handle_client(mut stream: TcpStream) -> String{
     
 
 }
-pub fn tcp_listener(port: &String) -> std::io::Result<String>{
-    let ip = "0.0.0.0".to_owned() + ":" + &port;
+pub fn tcp_listener(port: &String, tx: mpsc::Sender<String>){
+    let ip = "0.0.0.0".to_owned() + ":" +&port;
     println!("{}",ip);
     let listener = TcpListener::bind(ip).expect("could not bind to Ip and port");
     println!("local addr: {}",listener.local_addr().unwrap()); 
-    let mut result = String::new();
+    //
+    //Listen to stream
     for stream in listener.incoming(){
+        //hanlde incoming stream
         match stream{
             Ok(stream) => {
-                result = handle_client(stream);
-                return Ok(result);
+                println!("TCP LISTENER RUNNING..");
+                let result = handle_client(stream);
+                tx.send(result).unwrap();
             },
             Err(e) => {
                 eprint!("{}",e);
             }
         }
-    } 
-    Ok(String::new())
+        } 
 }
