@@ -64,13 +64,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "joyer"
-version = "0.1.0"
-dependencies = [
- "uinput",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.174"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -115,6 +108,13 @@ name = "pkg-config"
 version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
+
+[[package]]
+name = "playport"
+version = "0.1.0"
+dependencies = [
+ "uinput",
+]
 
 [[package]]
 name = "uinput"

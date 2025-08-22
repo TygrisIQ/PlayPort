@@ -20,12 +20,11 @@ fn main(){
     });
    
     loop {
-    if let Ok(x) = rx.try_recv(){
+    if let Ok(x) = rx.recv(){
        JoyDevice::handle_input(&mut jdevice, x); 
     }
     }
     }
-//a single input is being read multiple times leading to f key being pressed repeatedly
 
 
 

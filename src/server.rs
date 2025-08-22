@@ -3,21 +3,21 @@ use std::sync::{mpsc, Arc};
 use std::thread;
 use std::net::{TcpStream, TcpListener};
 use std::io::Read;
-pub fn broadcast() -> std::io::Result<()>{
+pub fn broadcast() -> !{
    let udp_address = "0.0.0.0:8005";
-   let socket = UdpSocket::bind("0.0.0.0:8005")?; 
+   let socket = UdpSocket::bind("0.0.0.0:8005").unwrap(); 
    println!("UDP DISCOVERY ON: {}", udp_address); 
 
    let mut buf = [0; 1024];
    loop{ 
-   let (content, source) = socket.recv_from(&mut buf)?;
+   let (content, source) = socket.recv_from(&mut buf).unwrap();
 
    let message = String::from_utf8_lossy(&buf[..content]);
     
    if message.trim() == "IamClient" {
        println!("UDP MESSAGE RECEIVED: {}", message.trim());
        let reply = "IamServer";
-       socket.send_to(reply.as_bytes(), source)?;
+       socket.send_to(reply.as_bytes(), source).unwrap();
    }
 }}
 

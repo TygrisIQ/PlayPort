@@ -7,7 +7,11 @@ pub struct JoyDevice{
     pub device : uinput::Device
 }
 
-
+impl Drop for JoyDevice{
+    fn drop(&mut self){
+        eprint!("DROPPING JOYDEVICE!");
+    }
+}
 impl JoyDevice{ 
 
 pub fn new() -> Self{
@@ -22,6 +26,8 @@ pub fn new() -> Self{
     
     return JoyDevice { device: device }
     }
+
+
 pub fn handle_input(&mut self, code: String){
   let code = code.as_str().trim();
 
@@ -29,29 +35,32 @@ pub fn handle_input(&mut self, code: String){
     dbg!(key);
     match key{
         "A" => { self.device.press(&Controller::GamePad(GamePad::South)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "B" => { self.device.press(&Controller::GamePad(GamePad::East)).unwrap();
-            self.device.synchronize().unwrap()},
+            },
         "Y" => { self.device.press(&Controller::GamePad(GamePad::North)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "X" => { self.device.press(&Controller::GamePad(GamePad::West)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "LB" => { self.device.press(&Controller::GamePad(GamePad::TL)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "RB" => { self.device.press(&Controller::GamePad(GamePad::TR)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         //DPAD STUFF
         "DPAD_DOWN" => {self.device.press(&Controller::DPad(controller::DPad::Down)).unwrap();
-                self.device.synchronize().unwrap();
+                
         dbg!("ddown pressed!");}
         "DPAD_UP" => {self.device.press(&Controller::DPad(controller::DPad::Up)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "DPAD_RIGHT" => {self.device.press(&Controller::DPad(controller::DPad::Right)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "DPAD_LEFT" => {self.device.press(&Controller::DPad(controller::DPad::Left)).unwrap();
-                self.device.synchronize().unwrap()}
+            },
+        "SELECT" => { self.device.press(&Controller::GamePad(GamePad::Select)).unwrap();},
+        "START"  => { self.device.press(&Controller::GamePad(GamePad::Start)).unwrap();}
         _ => {println!("UNKNOWN INPUT!");}
         }
+        self.device.synchronize().expect("DEVICE SYNC FAILED!");
 
   }
 
@@ -59,32 +68,34 @@ pub fn handle_input(&mut self, code: String){
     dbg!(key);
     match key{
          "A" => { self.device.release(&Controller::GamePad(GamePad::South)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "B" => { self.device.release(&Controller::GamePad(GamePad::East)).unwrap();
-            self.device.synchronize().unwrap()},
+            },
         "Y" => { self.device.release(&Controller::GamePad(GamePad::North)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "X" => { self.device.release(&Controller::GamePad(GamePad::West)).unwrap();
-            self.device.synchronize().unwrap();},
+            },
         "LB" => { self.device.release(&Controller::GamePad(GamePad::TL)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "RB" => { self.device.release(&Controller::GamePad(GamePad::TR)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         //dpad release 
         "DPAD_DOWN" => {self.device.release(&Controller::DPad(controller::DPad::Down)).unwrap();
-                self.device.synchronize().unwrap();
+                
                 dbg!("DPAD DOWN PRESSED!");}
         "DPAD_UP" => {self.device.release(&Controller::DPad(controller::DPad::Up)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "DPAD_RIGHT" => {self.device.release(&Controller::DPad(controller::DPad::Right)).unwrap();
-                self.device.synchronize().unwrap();}
+                }
         "DPAD_LEFT" => {self.device.release(&Controller::DPad(controller::DPad::Left)).unwrap();
-                self.device.synchronize().unwrap()}
+                },
+        "SELECT" => {self.device.release(&Controller::GamePad(GamePad::Select)).unwrap();},
+        "START" => {self.device.release(&Controller::GamePad(GamePad::Start)).unwrap();}
 
 
-
-        _ => ()
+        _ => { println!("UNKNOWN INPUT!");}
     }
+    self.device.synchronize().unwrap();
   }
 }
 
