@@ -45,10 +45,10 @@ pub fn handle_input(&mut self, code: String){
         "B" => { self.device.press(&Controller::GamePad(GamePad::East)).unwrap();
             self.device.synchronize().unwrap();
             },
-        "Y" => { self.device.press(&Controller::GamePad(GamePad::North)).unwrap();
+        "Y" => { self.device.press(&Controller::GamePad(GamePad::West)).unwrap();
             self.device.synchronize().unwrap();
             },
-        "X" => { self.device.press(&Controller::GamePad(GamePad::West)).unwrap();
+        "X" => { self.device.press(&Controller::GamePad(GamePad::North)).unwrap();
             self.device.synchronize().unwrap();
             },
         "LB" => { self.device.press(&Controller::GamePad(GamePad::TL)).unwrap();
@@ -82,9 +82,9 @@ pub fn handle_input(&mut self, code: String){
             },
         "B" => { self.device.release(&Controller::GamePad(GamePad::East)).unwrap();
             },
-        "Y" => { self.device.release(&Controller::GamePad(GamePad::North)).unwrap();
+        "Y" => { self.device.release(&Controller::GamePad(GamePad::West)).unwrap();
             },
-        "X" => { self.device.release(&Controller::GamePad(GamePad::West)).unwrap();
+        "X" => { self.device.release(&Controller::GamePad(GamePad::North)).unwrap();
             },
         "LB" => { self.device.release(&Controller::GamePad(GamePad::TL)).unwrap();
                 },
