@@ -7,7 +7,7 @@
 
 ### build the server application with cargo 
 
-'cargo build --release'
+``` cargo build --release ```
 
 ### You will need the [Android client](https://github.com/TygrisIQ/PlayPort_Client)
 
@@ -20,9 +20,12 @@ Load the module:
 ```bash
 sudo modprobe uinput
 
+```
+
 Verify it is loaded:
 
 ```bash 
+
 lsmod | grep uinput
 
 
