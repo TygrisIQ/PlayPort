@@ -11,8 +11,8 @@
 
 ### You will need the [Android client](https://github.com/TygrisIQ/PlayPort_Client)
 
-> **Note: 'uinput' must be loaded**
-> The server uses linux uinput. if the 'uinput' kernel module is not loaded, the app will **crash at startup**
+> **Note: `uinput` must be loaded**
+> The server uses linux uinput. if the `uinput` kernel module is not loaded, the app will **crash at startup**
 
 
 Load the module:
