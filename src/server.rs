@@ -19,27 +19,26 @@ pub fn broadcast() -> !{
         }
 }}
 
-
-fn handle_client(stream: TcpStream, tx: mpsc::Sender<String>) {
+fn handle_client(stream: TcpStream, tx: mpsc::Sender<Vec<u8>>) {
     let peer = stream.peer_addr().ok();
     println!("Client connected: {:?}", peer);
-    let reader = BufReader::new(stream);
-    for line in reader.lines() {
-        match line {
-            Ok(msg) if !msg.trim().is_empty() => {
-                if tx.send(msg).is_err() {
-                    break; 
+    let mut reader = BufReader::new(stream);
+    let mut buf = Vec::new();
+    loop {
+        buf.clear();
+        match reader.read_until(b'\n', &mut buf) {
+            Ok(0) => { println!("Client disconnected: {:?}", peer); break; }
+            Ok(_) => {
+                // strip newline delimiter
+                if buf.last() == Some(&b'\n') { buf.pop(); }
+                if !buf.is_empty() {
+                    eprintln!("[SERVER] received {} bytes: {:?}", buf.len(), buf);
+                    if tx.send(buf.clone()).is_err() { break; }
                 }
             }
-            //blank line => skip
-            Ok(_) => {} 
-            Err(e) => {
-                eprintln!("Read error: {}", e);
-                break;
-            }
+            Err(e) => { eprintln!("Read error: {}", e); break; }
         }
     }
-    println!("client disconnected!! {:?}", peer);
 }
 // fn handle_client(mut stream: TcpStream) -> String{  
 //         let mut buf = [0; 1024];
@@ -63,8 +62,7 @@ fn handle_client(stream: TcpStream, tx: mpsc::Sender<String>) {
     
 
 // }
-pub fn tcp_listener(port: &String, tx: mpsc::Sender<String>){
-    let ip = "0.0.0.0".to_owned() + ":" +&port;
+pub fn tcp_listener(port: &str, tx: mpsc::Sender<Vec<u8>>) {    let ip = "0.0.0.0".to_owned() + ":" +&port;
     println!("{}",ip);
     let listener = TcpListener::bind(ip).expect("could not bind to Ip and port");
     println!("local addr: {}",listener.local_addr().unwrap()); 
