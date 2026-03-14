@@ -5,7 +5,7 @@ mod server;
 mod input;
 mod debug_log;
 
-const VERSION : &str = "1.1";
+const VERSION : &str = "1.1.1";
 const WELCOME : &str = "
     PLAYPORT ${VERSION} \n 
     YOU WILL NEED THE ANDROID JOYSTICK CLIENT 
