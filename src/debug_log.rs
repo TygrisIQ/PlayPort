@@ -1,0 +1,12 @@
+
+
+
+#[macro_export] macro_rules! debug_log {
+    ($($arg:tt)+) => {
+        if cfg!(debug_assertions){
+            eprintln!($($arg)+)
+        }
+    }
+}
+
+

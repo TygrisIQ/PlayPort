@@ -1,13 +1,12 @@
 use std::thread;
 use std::sync::mpsc;
 use input::JoyDevice;
-
 mod server;
 mod input;
+mod debug_log;
 fn main(){
     let port= std::env::args().nth(1).unwrap_or(String::from("8007"));
-    println!("port :{}",port);
-    
+    debug_log!("port :{}", port);
     //device init
     let mut jdevice = input::JoyDevice::new();
     //network

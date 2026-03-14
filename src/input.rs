@@ -1,6 +1,6 @@
 use uinput::event::{controller::{self, GamePad}, Controller};
 use uinput::event::absolute::{Absolute, Position};
-
+use crate::debug_log;
 // Binary protocol:
 // Buttons:  [msg_type: u8] [button_id: u8]             = 2 bytes
 // Axes:     [msg_type: u8] [axis_id: u8] [value: i16]  = 4 bytes
@@ -62,7 +62,7 @@ pub struct JoyDevice {
 
 impl Drop for JoyDevice {
     fn drop(&mut self) {
-        eprint!("DROPPING JOYDEVICE!");
+        debug_log!("DROPPING JOYDEVICE!");
     }
 }
 
@@ -88,22 +88,22 @@ impl JoyDevice {
     pub fn handle_input(&mut self, packet: Vec<u8>) {
         if packet.is_empty() { return; }
 
-        eprintln!("[INPUT] raw packet: {:?}", packet);
+        debug_log!("[INPUT] raw packet: {:?}", packet);
 
         match packet[0] {
             PRESS | RELEASE if packet.len() >= 2 => {
                 let pressing = packet[0] == PRESS;
-                eprintln!("[INPUT] {} button id={:#04x}", if pressing { "PRESS" } else { "RELEASE" }, packet[1]);
+                debug_log!("[INPUT] {} button id={:#04x}", if pressing { "PRESS" } else { "RELEASE" }, packet[1]);
                 self.handle_button(packet[1], pressing);
                 self.device.synchronize().expect("DEVICE SYNC FAILED!");
             }
             AXIS if packet.len() >= 4 => {
                 let value = i16::from_le_bytes([packet[2], packet[3]]) as i32;
-                eprintln!("[INPUT] AXIS id={:#04x} value={}", packet[1], value);
+                debug_log!("[INPUT] AXIS id={:#04x} value={}", packet[1], value);
                 self.handle_axis(packet[1], value);
                 let _ = self.device.synchronize();
             }
-            _ => { eprintln!("[INPUT] UNKNOWN PACKET: {:?}", packet); }
+            _ => { debug_log!("[INPUT] UNKNOWN PACKET: {:?}", packet); }
         }
     }
 
