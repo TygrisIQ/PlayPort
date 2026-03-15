@@ -68,8 +68,9 @@ fn handle_client(stream: TcpStream, tx: mpsc::Sender<Vec<u8>>) {
     
 
 // }
-pub fn tcp_listener(port: &str, tx: mpsc::Sender<Vec<u8>>) {    let ip = "0.0.0.0".to_owned() + ":" +&port;
-    debug_log!("{}",ip);
+pub fn tcp_listener(port: &str, tx: mpsc::Sender<Vec<u8>>) {    
+    let ip = "0.0.0.0".to_owned() + ":" +&port;
+    debug_log!("UDP discovery listening on : {}",ip);
     let listener = TcpListener::bind(ip).expect("could not bind to Ip and port");
     debug_log!("local addr: {}",listener.local_addr().unwrap()); 
     debug_log!("TCP listening on {}", listener.local_addr().unwrap());
